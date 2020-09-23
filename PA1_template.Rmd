@@ -79,14 +79,45 @@ print (paste("The interval with the highest avg steps is ", avg_steps_per_interv
 Note that there are a number of days/intervals where there are missing values (coded as NA). The presence of missing days may introduce bias into some calculations or summaries of the data.
 
 1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+```{r}
+# Calculate the number of rows with missing values
+missing_value_act <- activity[!complete.cases(activity), ]
+nrow(missing_value_act)
+```
 
 
 2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
+```{r}
+# For each NA value, it will be substituted by the avg steps
+for (i in 1:nrow(activity)) {
+    if(is.na(activity$steps[i])) {
+        val <- avg_steps_per_interval$steps[which(avg_steps_per_interval$interval == activity$interval[i])]
+        activity$steps[i] <- val 
+    }
+}
+```
 
 
 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
+```{r}
+# New dataset including missing data filled in
+steps_per_day_impute <- aggregate(steps ~ date, activity, sum)
+```
+
 
 4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+```{r}
+# Historgram of the total number of steps taken each day 
+hist(steps_per_day_impute$steps, main = "Histogram of total number of steps per day (IMPUTED)", xlab = "Steps per day")
+```
+```{r}
+#Calculate and report the mean and median total number of steps taken per day
+round(mean(steps_per_day_impute$steps))
+```
+```{r}
+median(steps_per_day_impute$steps)
+```
+There is no significance difference between mean or median compare with the previous calculation without missing values
 
 ## Are there differences in activity patterns between weekdays and weekends?
 For this part the weekdays() function may be of some help here. Use the dataset with the filled-in missing values for this part.
