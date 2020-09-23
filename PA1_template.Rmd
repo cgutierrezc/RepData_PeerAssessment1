@@ -124,7 +124,41 @@ For this part the weekdays() function may be of some help here. Use the dataset 
 
 1. Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
 
+```{r}
+#Function to determine if the date is a weekday
+week_day <- function(date_val) {
+    wd <- weekdays(as.Date(date_val, '%Y-%m-%d'))
+    if  (!(wd == 'Saturday' || wd == 'Sunday')) {
+        x <- 'Weekday'
+    } else {
+        x <- 'Weekend'
+    }
+    x
+}
+```
+
+```{r}
+# Applying week_day function on the dataset and adding new column with the weekday or weekend value.
+activity$day_type <- as.factor(sapply(activity$date, week_day))
+```
 
 
-2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). The plot should look something like the following, which was created using simulated data:
+2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
+```{r}
+
+library(ggplot2)
+
+# Aggregated data frame by intervals and day_type
+steps_per_day_impute <- aggregate(steps ~ interval+day_type, activity, mean)
+
+# Create the plot
+plt <- ggplot(steps_per_day_impute, aes(interval, steps)) +
+    geom_line(stat = "identity", aes(colour = day_type)) +
+    theme_gray() +
+    facet_grid(day_type ~ ., scales="fixed", space="fixed") +
+    labs(x="Interval", y=expression("No of Steps")) +
+    ggtitle("No of steps Per Interval by day type")
+print(plt)
+```
+
 
