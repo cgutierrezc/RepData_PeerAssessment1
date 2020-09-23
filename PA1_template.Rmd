@@ -35,7 +35,7 @@ For this part of the assignment, you can ignore the missing values in the datase
 
 ```{r}
 # Calculate the total number of steps taken per day
-steps_per_day <- aggregate(steps ~ date, good_act, sum)
+steps_per_day <- aggregate(steps ~ date, newactivity, sum)
 
 # Histogram showing no of steps per day
 hist(steps_per_day$steps, main = "Histogram of total number of steps per day", xlab = "Steps per day")
