@@ -54,7 +54,26 @@ median(steps_per_day$steps)
 ## What is the average daily activity pattern?
 1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
+```{r}
+# Average steps per interval for all days 
+avg_steps_per_interval <- aggregate(steps ~ interval, newactivity, mean)
+
+# Average steps per day for all intervals
+avg_steps_per_day <- aggregate(steps ~ date, newactivity, mean)
+
+# Plot a time series
+plot(avg_steps_per_interval$interval, avg_steps_per_interval$steps, type='l', col=1, main="Average number of steps by Interval", xlab="Time Intervals", ylab="Average number of steps")
+```
+
+
 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+```{r}
+# Identify the interval index with the highest average steps
+interval_idx <- which.max(avg_steps_per_interval$steps)
+
+# Identify the specific interval and the average steps for that interval
+print (paste("The interval with the highest avg steps is ", avg_steps_per_interval[interval_idx, ]$interval, " and the no of steps for that interval is ", round(avg_steps_per_interval[interval_idx, ]$steps, digits = 1)))
+```
 
 ## Imputing missing values
 Note that there are a number of days/intervals where there are missing values (coded as NA). The presence of missing days may introduce bias into some calculations or summaries of the data.
